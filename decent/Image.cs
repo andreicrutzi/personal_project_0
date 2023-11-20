@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -16,33 +17,72 @@ namespace decent
         public float Alpha;
         public string Text, FontName, Path;
         public Vector2 Position, Scale;
+        public bool IsActive;
         public Rectangle SourceRectangle;
         [XmlIgnore]
         public Texture2D Texture;
-        Vector2 Origin;
-        ContentManager Content;
-        RenderTarget2D RenderTarget;
-        SpriteFont Font;
+        Vector2 origin;
+        ContentManager content;
+        RenderTarget2D renderTarget;
+        SpriteFont font;
+        Dictionary<string, ImageEffect> effectList;
+        public String Effects;
+
+        public FadeEffect FadeEffect;
+
+        void SetEffect<T>(ref T effect)
+        {
+            if(effect == null)
+                effect = (T)Activator.CreateInstance(typeof(T));
+            else 
+            {
+                (effect as ImageEffect).IsActive = true;
+                var obj = this;
+                (effect as ImageEffect).LoadContent(ref obj);
+            }
+
+            effectList.Add(effect.GetType().ToString().Replace("decent.", ""), (effect as ImageEffect));
+        }
+
+        public void ActivateEffect(string effect)
+        {
+            if(effectList.ContainsKey(effect))
+            {
+                effectList[effect].IsActive = true;
+                var obj = this;
+                effectList[effect].LoadContent(ref obj);
+            }
+        }
+
+        public void DeactivateEffect(string effect)
+        {
+            if(effectList.ContainsKey(effect))
+            {
+                effectList[effect].IsActive = false;
+                effectList[effect].UnloadContent();
+            }
+        }
 
         public Image() 
         {
-            Path = Text = String.Empty;
-            FontName = "Arial";
+            Path = Text = Effects = String.Empty;
+            FontName = "Fonts/Arial";
             Position = Vector2.Zero;
             Scale = Vector2.One;
             Alpha = 1.0f;
             SourceRectangle = Rectangle.Empty;
+            effectList = new Dictionary<string, ImageEffect>();
         }
 
         public void LoadContent() 
         {
-            Content = new ContentManager(SceneManager.Instance.Content.ServiceProvider, "Content");
+            content = new ContentManager(SceneManager.Instance.Content.ServiceProvider, "Content");
             if(Path != String.Empty)
             {
-                Texture = Content.Load<Texture2D>(Path);
+                Texture = content.Load<Texture2D>(Path);
             }
 
-            Font = Content.Load<SpriteFont>(FontName);
+            font = content.Load<SpriteFont>(FontName);
 
             Vector2 dimensions = Vector2.Zero;
             
@@ -50,15 +90,15 @@ namespace decent
             {
                 dimensions.X += Texture.Width;
             }
-            dimensions.X += Font.MeasureString(Text).X;
+            dimensions.X += font.MeasureString(Text).X;
 
             if(Texture != null)
             {
-                dimensions.Y = Math.Max(Texture.Height, Font.MeasureString(Text).Y);
+                dimensions.Y = Math.Max(Texture.Height, font.MeasureString(Text).Y);
             }
             else
             {
-                dimensions.Y = Font.MeasureString(Text).Y;
+                dimensions.Y = font.MeasureString(Text).Y;
             }
 
             if(SourceRectangle == Rectangle.Empty)
@@ -66,36 +106,54 @@ namespace decent
                 SourceRectangle = new Rectangle(0, 0, (int)dimensions.X, (int)dimensions.Y);
             }
 
-            RenderTarget = new RenderTarget2D(SceneManager.Instance.graphicsDevice,
+            renderTarget = new RenderTarget2D(SceneManager.Instance.graphicsDevice,
                 (int)dimensions.X, (int)dimensions.Y);
-            SceneManager.Instance.graphicsDevice.SetRenderTarget(RenderTarget);
+            SceneManager.Instance.graphicsDevice.SetRenderTarget(renderTarget);
             SceneManager.Instance.graphicsDevice.Clear(Color.Transparent);
             SceneManager.Instance.spriteBatch.Begin();
             if(Texture != null)
             {
                 SceneManager.Instance.spriteBatch.Draw(Texture, Vector2.Zero, Color.White);
             }
-            SceneManager.Instance.spriteBatch.DrawString(Font, Text, Vector2.Zero, Color.White);
+            SceneManager.Instance.spriteBatch.DrawString(font, Text, Vector2.Zero, Color.White);
             SceneManager.Instance.spriteBatch.End();
 
-            Texture = RenderTarget;
+            Texture = renderTarget;
             SceneManager.Instance.graphicsDevice.SetRenderTarget(null);
+
+            SetEffect<FadeEffect>(ref FadeEffect);
+
+            if(Effects != String.Empty)
+            {
+                String[] split = Effects.Split(':');
+                foreach(String item in split)
+                    ActivateEffect(item);
+            }
         }
 
         public void UnloadContent()
         {
-            Content.Unload();
+            content.Unload();
+            foreach (var effect in effectList)
+            {
+                DeactivateEffect(effect.Key);
+            }
         }
 
         public void Update(GameTime gameTime)
         {
+            foreach (var effect in effectList)
+            {
+                if(effect.Value.IsActive)
+                    effect.Value.Update(gameTime);
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            Origin = new Vector2(SourceRectangle.Width / 2, SourceRectangle.Height / 2);
-            spriteBatch.Draw(Texture, Position + Origin, SourceRectangle, Color.White * Alpha,
-                0.0f, Origin, Scale, SpriteEffects.None, 0.0f);
+            origin = new Vector2(SourceRectangle.Width / 2, SourceRectangle.Height / 2);
+            spriteBatch.Draw(Texture, Position + origin, SourceRectangle, Color.White * Alpha,
+                0.0f, origin, Scale, SpriteEffects.None, 0.0f);
         }
     }
 }

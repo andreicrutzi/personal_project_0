@@ -25,4 +25,4 @@ D:\Insanity\notgood\decent\obj\Debug\net6.0\refint\decent.dll
 D:\Insanity\notgood\decent\obj\Debug\net6.0\decent.pdb
 D:\Insanity\notgood\decent\obj\Debug\net6.0\decent.genruntimeconfig.cache
 D:\Insanity\notgood\decent\obj\Debug\net6.0\ref\decent.dll
-D:\Insanity\notgood\decent\bin\Debug\net6.0\Content\Arial.xnb
+D:\Insanity\notgood\decent\bin\Debug\net6.0\Content\Fonts\Arial.xnb

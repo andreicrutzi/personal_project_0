@@ -4,7 +4,7 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>D:/Insanity/notgood/decent/Content/Arial.spritefont</File>
+    <File>D:/Insanity/notgood/decent/Content/Fonts/Arial.spritefont</File>
     <File>D:/Insanity/notgood/decent/Content/SplashScene/Image1.png</File>
   </SourceFiles>
   <DestFiles>

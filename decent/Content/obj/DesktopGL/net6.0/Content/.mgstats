@@ -1,4 +1,4 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"D:/Insanity/notgood/decent/Content/Arial.spritefont","D:/Insanity/notgood/decent/Content/bin/DesktopGL/Content/Arial.xnb","FontDescriptionProcessor","SpriteFontContent",2068,21535,0.1894355
-"D:/Insanity/notgood/decent/Content/Load/SplashScene.xml","D:\Insanity\notgood\decent\Content\bin\DesktopGL\Content\Load/SplashScene.xml","CopyItem","File",212,212,0.001152
+"D:/Insanity/notgood/decent/Content/Fonts/Arial.spritefont","D:/Insanity/notgood/decent/Content/bin/DesktopGL/Content/Fonts/Arial.xnb","FontDescriptionProcessor","SpriteFontContent",2068,21535,0.1825355
+"D:/Insanity/notgood/decent/Content/Load/SplashScene.xml","D:\Insanity\notgood\decent\Content\bin\DesktopGL\Content\Load/SplashScene.xml","CopyItem","File",269,269,0.0009337
 "D:/Insanity/notgood/decent/Content/SplashScene/Image1.png","D:/Insanity/notgood/decent/Content/bin/DesktopGL/Content/SplashScene/Image1.xnb","TextureProcessor","Texture2DContent",1235623,8240725,0.3129665

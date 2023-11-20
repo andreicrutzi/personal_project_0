@@ -27,9 +27,7 @@ namespace decent
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-
             Image.Draw(spriteBatch);
-           
         }
     }
 }

@@ -2,11 +2,13 @@
 <SplashScene>
 	<Image>
 		<Path>SplashScene/Image1</Path>
-		<Position>
-			<X>200</X>
-			<Y>10</Y>
-		</Position>
-		<Font>Arial</Font>
+		<Effects>FadeEffect</Effects>
+		<IsActive>true</IsActive>
+		<Alpha>0.5</Alpha>
+		<Scale>
+			<X>2.0</X>
+			<Y>2.0</Y>
+		</Scale>
 	</Image>
 </SplashScene>
 
